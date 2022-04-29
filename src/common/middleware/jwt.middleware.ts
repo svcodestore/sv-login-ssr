@@ -11,6 +11,7 @@ export class JwtMiddleware implements NestMiddleware {
 
   async use (req: Request, res: Response, next: NextFunction) {
     const authToken = req.originalUrl.startsWith('/api') ? req.headers.authorization : req.cookies.Authorization
+    const appUrl = this.configService.get<string>('APP_URL')
     if (authToken?.startsWith('Bearer ')) {
       const token = authToken.substr(7)
       try {
@@ -27,7 +28,7 @@ export class JwtMiddleware implements NestMiddleware {
           if (req.originalUrl === '/') {
             next()
           } else {
-            res.redirect('/')
+            res.redirect(appUrl + '/')
           }
           return
         }
@@ -39,7 +40,7 @@ export class JwtMiddleware implements NestMiddleware {
         await client.disconnect()
         if (isLogin === 1) {
           if (req.originalUrl === '/') {
-            res.redirect('/goto')
+            res.redirect(appUrl + '/goto')
           } else {
             next()
           }
@@ -51,21 +52,21 @@ export class JwtMiddleware implements NestMiddleware {
         }
       } catch {
         if (req.originalUrl === '/') {
-          res.redirect('/goto')
+          res.redirect(appUrl + '/goto')
         } else {
           next()
         }
         return
       }
       if (req.originalUrl === '/') {
-        res.redirect('/goto')
+        res.redirect(appUrl + '/goto')
       } else {
         next()
       }
     } else if (req.originalUrl === '/' || req.originalUrl === '/goto') {
       next()
     } else {
-      res.redirect('/')
+      res.redirect(appUrl + '/')
     }
   }
 }
