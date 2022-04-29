@@ -2,13 +2,14 @@ import { ReactNestFetch } from 'ssr-types-react'
 
 const fetch: ReactNestFetch<{
   apiService: {
-    index: () => Promise<any>
+    isLogin: () => Promise<boolean>
   }
 }> = async ({ ctx, routerProps }) => {
-  const data = __isBrowser__ ? await (await window.fetch('/api/index')).json() : await ctx!.apiService?.index()
+  const { isLogin } = __isBrowser__ ? await (await window.fetch('/api/is-login')).json() : await ctx!.apiService?.isLogin()
+
   return {
     // 建议根据模块给数据加上 namespace防止数据覆盖
-    indexData: data
+    isLogin: isLogin
   }
 }
 

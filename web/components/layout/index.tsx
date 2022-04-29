@@ -19,7 +19,12 @@ const Layout = (props: LayoutProps) => {
         <title>SV SSO LOGIN</title>
         {injectCss}
       </head>
-      <body>
+      <body
+        style={{
+          margin: 0,
+          padding: 0
+        }}
+      >
         <div
           id='app'
           style={{

@@ -21,4 +21,18 @@ export class ApiController {
   async login (@Body() body: LoginParams): Promise<any> {
     return await this.apiService.login(body)
   }
+
+  @Get('is-login')
+  async isLogin () {
+    return await this.apiService.isLogin()
+  }
+
+  @Post('/login/oauth2.0/grant-code')
+  async getGrantCode (@Body() body: {
+    responseType: string
+    redirectUri: string
+    clientId: string
+  }): Promise<any> {
+    return await this.apiService.getGrantCode(body)
+  }
 }

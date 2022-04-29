@@ -1,8 +1,8 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Alert, Form, Button, Input } from 'antd'
+import { Alert, Form, Button, Input, message } from 'antd'
 import React, { useContext, useState } from 'react'
 import { debounce } from 'lodash'
-import { login, getCurrentApplication, getCurrentUser } from '@/apis'
+import { login } from '@/apis'
 
 import { aesEncrypt } from '@/utils/crypto'
 import { IContext, SProps } from 'ssr-types-react'
@@ -31,6 +31,10 @@ const Login: React.FC = (props: SProps) => {
     if (state?.currentApplication.clientId) {
       localStorage.setItem('clientId', state.currentApplication.clientId)
     }
+    const accessToken = localStorage.getItem('accessToken') || ''
+    if (accessToken) {
+      props.history.push('/goto')
+    }
   }
 
   const [isLoginError, setLoginState] = useState(false)
@@ -52,7 +56,13 @@ const Login: React.FC = (props: SProps) => {
       localStorage.setItem('accessToken', msg.data.accessToken)
       document.cookie =
         'Authorization=Bearer ' + (msg.data.accessToken as string)
-      props.history.push('/goto')
+      const params = new URLSearchParams(props.location.search)
+      message.success('登录成功')
+      if (params.get('redirect')) {
+        props.history.push(params.get('redirect') || '/goto')
+      } else {
+        window.location.href = window.location.origin + '/goto'
+      }
     }
   }, 300)
 

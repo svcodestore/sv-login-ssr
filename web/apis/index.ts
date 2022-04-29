@@ -2,7 +2,6 @@ import { stringify } from 'qs'
 import { LoginParams, RequestGrantCodeParams } from '~/typings/data'
 
 enum Api {
-  // Login = 'http://localhost:8888/api/login',
   Login = '/api/login',
   CurrentApplication = '/api/application/current-application',
   GrantCode = '/api/login/oauth2.0/grant-code',
@@ -25,12 +24,15 @@ export async function getCurrentApplication () {
   return await window.fetch(Api.CurrentApplication)
 }
 
-export async function getGrantCode (body: RequestGrantCodeParams) {
-  return await window.fetch(Api.GrantCode, {
+export async function getGrantCode (body: RequestGrantCodeParams, accessToken: string) {
+  return await (await window.fetch(Api.GrantCode, {
     method: 'post',
     body: stringify(body),
-    headers
-  })
+    headers: {
+      ...headers,
+      Authorization: 'Bearer ' + accessToken
+    }
+  })).json()
 }
 
 export async function getCurrentUser () {

@@ -21,3 +21,5 @@ code.zip
 .env_temp
 f.origin.yml
 .eslintcache
+
+.env.development
