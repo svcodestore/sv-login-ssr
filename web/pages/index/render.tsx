@@ -26,8 +26,11 @@ const Login: React.FC = (props: SProps) => {
   const { state } = useContext<
     IContext<{ currentApplication: ApplicationEntity }>
   >(STORE_CONTEXT)
-  if (state?.currentApplication.clientId && __isBrowser__) {
-    localStorage.setItem('clientId', state.currentApplication.clientId)
+
+  if (__isBrowser__) {
+    if (state?.currentApplication.clientId) {
+      localStorage.setItem('clientId', state.currentApplication.clientId)
+    }
   }
 
   const [isLoginError, setLoginState] = useState(false)
