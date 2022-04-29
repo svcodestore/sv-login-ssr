@@ -33,7 +33,7 @@ const Login: React.FC = (props: SProps) => {
     }
     const accessToken = localStorage.getItem('accessToken') || ''
     if (accessToken) {
-      props.history.push('/goto')
+      props.history.push(window.location.origin + '/goto')
     }
   }
 
@@ -59,7 +59,9 @@ const Login: React.FC = (props: SProps) => {
       const params = new URLSearchParams(props.location.search)
       message.success('登录成功')
       if (params.get('redirect')) {
-        props.history.push(params.get('redirect') || '/goto')
+        props.history.push(
+          window.location.origin + (params.get('redirect') || '/goto')
+        )
       } else {
         window.location.href = window.location.origin + '/goto'
       }

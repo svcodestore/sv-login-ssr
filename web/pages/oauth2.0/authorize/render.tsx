@@ -34,16 +34,16 @@ const Login: React.FC = (props: SProps) => {
             p.set('client_id', clientId)
             window.location.href = redirectUri + '?' + p.toString()
           } else {
-            props.history.push('/')
+            props.history.push(window.location.origin + '/')
           }
         })
       } else {
-        props.history.push('/goto')
+        props.history.push(window.location.origin + '/goto')
       }
     } else {
       const p = new URLSearchParams()
       p.set('redirect', pathname + search)
-      props.history.push('/?' + p.toString())
+      props.history.push(window.location.origin + '/?' + p.toString())
     }
   }
 
