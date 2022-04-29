@@ -29,7 +29,7 @@ export class ApiService {
 
   async login ({ username, password, type, clientId }: LoginParams) {
     const { data } = await axios.create({
-      baseURL: 'http://localhost:8888/api',
+      baseURL: this.configService.get<string>('OAUTH_API_URL'),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -88,7 +88,7 @@ export class ApiService {
     const authToken = req.headers.authorization || req.cookies.Authorization
 
     const { data } = await axios.create({
-      baseURL: 'http://localhost:8888/api',
+      baseURL: this.configService.get<string>('OAUTH_API_URL'),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: authToken
