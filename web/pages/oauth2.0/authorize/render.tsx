@@ -6,10 +6,12 @@ import { STORE_CONTEXT } from '_build/create-context'
 import { ApplicationEntity } from '@/../src/application/entities/application.entity'
 import { getGrantCode } from '@/apis'
 
-const Login: React.FC = (props: SProps) => {
-  const { state } = useContext<
-    IContext<{ currentApplication: ApplicationEntity }>
-  >(STORE_CONTEXT)
+interface Context {
+  currentApplication: ApplicationEntity
+}
+
+const Authorization = (props: SProps) => {
+  const { state } = useContext<IContext<Context>>(STORE_CONTEXT)
 
   if (__isBrowser__) {
     const accessToken = localStorage.getItem('accessToken') || ''
@@ -34,16 +36,16 @@ const Login: React.FC = (props: SProps) => {
             p.set('client_id', clientId)
             window.location.href = redirectUri + '?' + p.toString()
           } else {
-            props.history.push(window.location.origin + '/')
+            props.history.push('/')
           }
         })
       } else {
-        props.history.push(window.location.origin + '/goto')
+        props.history.push('/goto')
       }
     } else {
       const p = new URLSearchParams()
       p.set('redirect', pathname + search)
-      props.history.push(window.location.origin + '/?' + p.toString())
+      props.history.push('/?' + p.toString())
     }
   }
 
@@ -69,4 +71,4 @@ const Login: React.FC = (props: SProps) => {
   )
 }
 
-export default Login
+export default Authorization

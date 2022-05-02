@@ -9,6 +9,11 @@ import { IContext, SProps } from 'ssr-types-react'
 import { STORE_CONTEXT } from '_build/create-context'
 import { ApplicationEntity } from '@/../src/application/entities/application.entity'
 
+interface Context {
+  currentApplication: ApplicationEntity
+  isLogin: boolean
+}
+
 const LoginMessage: React.FC<{
   content: string
 }> = ({ content }) => (
@@ -22,18 +27,20 @@ const LoginMessage: React.FC<{
   />
 )
 
-const Login: React.FC = (props: SProps) => {
-  const { state } = useContext<
-    IContext<{ currentApplication: ApplicationEntity }>
-  >(STORE_CONTEXT)
+const Login = (props: SProps) => {
+  const { state } = useContext<IContext<Context>>(STORE_CONTEXT)
 
   if (__isBrowser__) {
+    if (!state?.isLogin) {
+      document.cookie = ''
+      localStorage.removeItem('accessToken')
+    }
     if (state?.currentApplication.clientId) {
       localStorage.setItem('clientId', state.currentApplication.clientId)
     }
     const accessToken = localStorage.getItem('accessToken') || ''
     if (accessToken) {
-      props.history.push(window.location.origin + '/goto')
+      props.history.push('/goto')
     }
   }
 
@@ -59,11 +66,9 @@ const Login: React.FC = (props: SProps) => {
       const params = new URLSearchParams(props.location.search)
       message.success('登录成功')
       if (params.get('redirect')) {
-        props.history.push(
-          window.location.origin + (params.get('redirect') || '/goto')
-        )
+        window.location.href = params.get('redirect') || '/goto'
       } else {
-        window.location.href = window.location.origin + '/goto'
+        window.location.href = '/goto'
       }
     }
   }, 300)

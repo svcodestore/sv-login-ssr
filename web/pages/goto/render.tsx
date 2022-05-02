@@ -8,7 +8,7 @@ export default (props: SProps) => {
     if (!state?.isLogin) {
       document.cookie = ''
       localStorage.removeItem('accessToken')
-      props.history.push(window.location.origin)
+      props.history.push('/')
     }
   }
   return <div>goto !</div>
