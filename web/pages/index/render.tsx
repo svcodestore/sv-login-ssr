@@ -32,20 +32,20 @@ const Login = (props: SProps) => {
 
   if (__isBrowser__) {
     if (!state?.isLogin) {
-      document.cookie = ''
+      document.cookie = 'Authorization=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
       localStorage.removeItem('accessToken')
-    }
-    if (state?.currentApplication.clientId) {
-      localStorage.setItem('clientId', state.currentApplication.clientId)
-    }
-    const accessToken = localStorage.getItem('accessToken') || ''
-    if (accessToken) {
-      props.history.push('/goto')
+    } else {
+      if (state?.currentApplication.clientId) {
+        localStorage.setItem('clientId', state.currentApplication.clientId)
+      }
+      const accessToken = localStorage.getItem('accessToken') || ''
+      if (accessToken) {
+        props.history.push('/goto')
+      }
     }
   }
 
   const [isLoginError, setLoginState] = useState(false)
-
   const onFinish = debounce(async (values: any) => {
     const data = { ...values, type: 'login' }
     data.clientId = localStorage.getItem('clientId') || ''
@@ -62,7 +62,7 @@ const Login = (props: SProps) => {
     } else {
       localStorage.setItem('accessToken', msg.data.accessToken)
       document.cookie =
-        'Authorization=Bearer ' + (msg.data.accessToken as string)
+        'Authorization=Bearer ' + (msg.data.accessToken as string) + ';path=/'
       const params = new URLSearchParams(props.location.search)
       message.success('登录成功')
       if (params.get('redirect')) {

@@ -3,46 +3,50 @@ import { Spin } from 'antd'
 
 import { IContext, SProps } from 'ssr-types-react'
 import { STORE_CONTEXT } from '_build/create-context'
-import { ApplicationEntity } from '@/../src/application/entities/application.entity'
 import { getGrantCode } from '@/apis'
 
 interface Context {
-  currentApplication: ApplicationEntity
+  isLogin: boolean
 }
 
 const Authorization = (props: SProps) => {
   const { state } = useContext<IContext<Context>>(STORE_CONTEXT)
 
   if (__isBrowser__) {
-    const accessToken = localStorage.getItem('accessToken') || ''
     const { pathname, search } = props.location
-    if (accessToken) {
-      const params = new URLSearchParams(search)
-      if (Array.from(params.keys()).length) {
-        const responseType = params.get('response_type') || ''
-        const redirectUri = params.get('redirect_uri') || ''
-        const clientId = params.get('client_id') || ''
-        getGrantCode(
-          {
-            responseType,
-            redirectUri,
-            clientId
-          },
-          accessToken
-        ).then(res => {
-          if (res.code === 0) {
-            const p = new URLSearchParams()
-            p.set('code', res.data.code)
-            p.set('client_id', clientId)
-            window.location.href = redirectUri + '?' + p.toString()
-          } else {
-            props.history.push('/')
-          }
-        })
-      } else {
-        props.history.push('/goto')
+    if (state?.isLogin) {
+      const accessToken = localStorage.getItem('accessToken') || ''
+      if (accessToken) {
+        const params = new URLSearchParams(search)
+        if (Array.from(params.keys()).length) {
+          const responseType = params.get('response_type') || ''
+          const redirectUri = params.get('redirect_uri') || ''
+          const clientId = params.get('client_id') || ''
+          getGrantCode(
+            {
+              responseType,
+              redirectUri,
+              clientId
+            },
+            accessToken
+          ).then(res => {
+            if (res.code === 0) {
+              const p = new URLSearchParams()
+              p.set('code', res.data.code)
+              p.set('client_id', clientId)
+              window.location.href = redirectUri + '?' + p.toString()
+            } else {
+              props.history.push('/')
+            }
+          })
+        } else {
+          props.history.push('/goto')
+        }
       }
     } else {
+      document.cookie = 'Authorization=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+      localStorage.removeItem('accessToken')
+
       const p = new URLSearchParams()
       p.set('redirect', pathname + search)
       props.history.push('/?' + p.toString())

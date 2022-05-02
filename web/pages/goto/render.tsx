@@ -6,7 +6,7 @@ export default (props: SProps) => {
   const { state } = useContext<IContext<{ isLogin: boolean }>>(STORE_CONTEXT)
   if (__isBrowser__) {
     if (!state?.isLogin) {
-      document.cookie = ''
+      document.cookie = 'Authorization=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
       localStorage.removeItem('accessToken')
       props.history.push('/')
     }

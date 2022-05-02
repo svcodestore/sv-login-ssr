@@ -38,7 +38,7 @@ import path = require('path')
 })
 export class AppModule implements NestModule {
   configure (consumer: MiddlewareConsumer) {
-    const whiteList = ['/oauth2.0/authorize', '/api/login', '/api/application/current-application']
+    const whiteList = ['/favicon.ico', '/oauth2.0/authorize', '/api/login', '/api/application/current-application']
     consumer.apply(JwtMiddleware).exclude(...whiteList).forRoutes('*')
   }
 }
