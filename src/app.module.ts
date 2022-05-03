@@ -14,7 +14,7 @@ import path = require('path')
     cache: true,
     expandVariables: true,
     // load: [configuration],
-    envFilePath: ['.env', '.env.development', '.env.production', '.env.test']
+    envFilePath: ['.env.development', '.env.production']
   }),
   TypeOrmModule.forRootAsync({
     name: 'sys',
