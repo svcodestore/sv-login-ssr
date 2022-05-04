@@ -4,4 +4,4 @@ COPY . .
 RUN npm config set registry https://registry.npmmirror.com && \
     npm install && npm run prod
 
-CMD ["sh"]
+CMD ["sh", "-c", "sh"]
