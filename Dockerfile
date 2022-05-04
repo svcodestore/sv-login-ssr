@@ -2,6 +2,6 @@ FROM node:lts-alpine3.15
 WORKDIR /web
 COPY . .
 RUN npm config set registry https://registry.npmmirror.com && \
-    npm install && npm run prod
+    npm install && npm i -g pm2 && npm run prod
 
-CMD ["sh", "-c", "sh"]
+CMD ["sh", "-c", "pm2 list && sh"]
