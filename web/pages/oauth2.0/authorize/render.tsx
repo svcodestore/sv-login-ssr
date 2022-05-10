@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Spin } from 'antd'
+import { message, Spin } from 'antd'
 
 import { IContext, SProps } from 'ssr-types-react'
 import { STORE_CONTEXT } from '_build/create-context'
@@ -36,6 +36,10 @@ const Authorization = (props: SProps) => {
               p.set('client_id', clientId)
               window.location.href = redirectUri + '?' + p.toString()
             } else {
+              document.cookie =
+                'Authorization=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+              localStorage.removeItem('accessToken')
+              message.info('用户未注册')
               props.history.push('/')
             }
           })
