@@ -3,6 +3,8 @@ export interface ModificationFields {
   updatedAt: string
 }
 
+export interface ResponseDataType<T = any> { code: number, data: T, message: string }
+
 export type User = {
   id: string
   uuid: string

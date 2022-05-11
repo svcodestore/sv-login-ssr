@@ -1,5 +1,5 @@
 import { stringify } from 'qs'
-import { LoginParams } from '~/typings/data'
+import { Application, LoginParams, ResponseDataType } from '~/typings/data'
 import { Inject, Injectable } from '@nestjs/common'
 import { ApplicationService } from '@/application/application.service'
 import { ConfigService } from '@nestjs/config'
@@ -23,8 +23,25 @@ export class ApiService {
     return await this.applicationService.findOne(this.configService.get<string>('SYSTEM_ID'))
   }
 
-  async myApps () {
-    return await Promise.resolve('my apps')
+  async getMyApps () {
+    const req = this.request
+    const authToken = req.headers.authorization || req.cookies.Authorization
+
+    try {
+      const { data } = await axios.create({
+        baseURL: this.configService.get<string>('OAUTH_API_URL'),
+        headers: {
+          Authorization: authToken
+        }
+      }).get<ResponseDataType<Application[]>>('/my/applications')
+      let app: Application[] = []
+      if (data.code === 0) {
+        app = data.data
+      }
+
+      return await Promise.resolve(app)
+    } catch {
+    }
   }
 
   async login ({ username, password, type, clientId }: LoginParams) {

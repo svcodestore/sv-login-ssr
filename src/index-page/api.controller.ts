@@ -13,8 +13,8 @@ export class ApiController {
   }
 
   @Get('/my-apps')
-  async getMyApps (): Promise<any> {
-    return await this.apiService.myApps()
+  async getMyApps () {
+    return await this.apiService.getMyApps()
   }
 
   @Post('/login')
