@@ -5,7 +5,6 @@ enum Api {
   Login = '/api/login',
   CurrentApplication = '/api/application/current-application',
   GrantCode = '/api/login/oauth2.0/grant-code',
-  CurrentUser = '/api/user/current-user'
 }
 
 const headers = {
@@ -33,8 +32,4 @@ export async function getGrantCode (body: RequestGrantCodeParams, accessToken: s
       Authorization: 'Bearer ' + accessToken
     }
   })).json()
-}
-
-export async function getCurrentUser () {
-  return await window.fetch(Api.CurrentUser)
 }

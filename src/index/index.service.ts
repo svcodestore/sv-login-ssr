@@ -6,11 +6,6 @@ import { ConfigService } from '@nestjs/config'
 import axios from 'axios'
 import { Request } from 'express'
 import { REQUEST } from '@nestjs/core'
-import jwt = require('jsonwebtoken')
-import { createClient } from 'redis'
-// const GrantedCodeRedisKey = 'grantedCode'
-// const IssuedAccessTokenRedisKey = 'issuedAccessToken'
-// const IssuedRefreshTokenRedisKey = "issuedRefreshToken"
 
 @Injectable()
 export class ApiService {
@@ -20,7 +15,7 @@ export class ApiService {
     @Inject(REQUEST) private readonly request: Request) { }
 
   async currentApplication () {
-    return await this.applicationService.findOne(this.configService.get<string>('SYSTEM_ID'))
+    return await this.applicationService.currentApplication()
   }
 
   async getMyApps () {
@@ -56,40 +51,24 @@ export class ApiService {
   }
 
   async isLogin () {
+    const rtn = { isLogin: false }
+
     const req = this.request
     const authToken = req.headers.authorization || req.cookies.Authorization
     if (authToken?.startsWith('Bearer ')) {
-      const token = authToken.substr(7)
       try {
-        const claims = jwt.verify(token, this.configService.get<string>('JWT_SIGN_KEY'))
-
-        const client = createClient()
-        let flag = false
-        client.on('error', (err) => {
-          if (err) {
-            flag = true
+        await axios.create({
+          baseURL: this.configService.get<string>('OAUTH_API_URL'),
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: authToken
           }
-        })
-        if (flag) {
-          return await Promise.resolve({ isLogin: false })
-        }
-
-        await client.connect()
-
-        // @ts-expect-error
-        const isLogin = await client.exists('issuedAccessToken:' + ((claims.userId || '') as string))
-        await client.disconnect()
-
-        if (isLogin === 1) {
-          return await Promise.resolve({ isLogin: true })
-        }
-
-        return await Promise.resolve({ isLogin: false })
+        }).get('/user/ping')
+        rtn.isLogin = true
       } catch {
-        return await Promise.resolve({ isLogin: false })
       }
     }
-    return await Promise.resolve({ isLogin: false })
+    return await Promise.resolve(rtn)
   }
 
   async getGrantCode ({

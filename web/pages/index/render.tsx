@@ -1,16 +1,15 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Alert, Form, Button, Input, message } from 'antd'
 import React, { useContext, useState } from 'react'
-import { debounce } from 'lodash'
+import debounce from 'lodash.debounce'
 import { login } from '@/apis'
 
 import { aesEncrypt } from '@/utils/crypto'
 import { IContext, SProps } from 'ssr-types-react'
 import { STORE_CONTEXT } from '_build/create-context'
-import { ApplicationEntity } from '@/../src/application/entities/application.entity'
 
 interface Context {
-  currentApplication: ApplicationEntity
+  currentApplication: any
   isLogin: boolean
 }
 

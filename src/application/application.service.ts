@@ -1,25 +1,17 @@
 import { ConfigService } from '@nestjs/config'
-import { Connection, Repository } from 'typeorm'
-import { ApplicationEntity } from './entities/application.entity'
 import { Injectable } from '@nestjs/common'
-import { InjectConnection } from '@nestjs/typeorm'
+import axios from 'axios'
 
 @Injectable()
 export class ApplicationService {
-  private readonly applicationRepository: Repository<ApplicationEntity>
-  private readonly configService: ConfigService
-
-  constructor (@InjectConnection('sys')
-  // @ts-expect-error
-  private readonly connection: Connection) {
-    this.applicationRepository = connection.getRepository(ApplicationEntity)
-  }
-
-  async findOne (id: string) {
-    return await this.applicationRepository.findOne(id)
+  constructor (private readonly configService: ConfigService) {
   }
 
   async currentApplication () {
-    return await this.findOne(this.configService.get<string>('SYSTEM_ID'))
+    const { data } = await axios.create({
+      baseURL: this.configService.get<string>('OAUTH_API_URL')
+    }).get('/application/current-application')
+
+    return data.data
   }
 }

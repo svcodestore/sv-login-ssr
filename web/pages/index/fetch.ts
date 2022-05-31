@@ -1,9 +1,8 @@
-import { ApplicationEntity } from './../../../src/application/entities/application.entity'
 import { ReactNestFetch } from 'ssr-types-react'
 
 const fetch: ReactNestFetch<{
   apiService: {
-    currentApplication: () => Promise<ApplicationEntity>
+    currentApplication: () => Promise<any>
     isLogin: () => Promise<{ isLogin: boolean }>
   }
 }> = async ({ ctx, routerProps }) => {
