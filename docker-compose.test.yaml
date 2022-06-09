@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  sv-login-test:
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile.test
+    ports:
+      - "4010:3000"
