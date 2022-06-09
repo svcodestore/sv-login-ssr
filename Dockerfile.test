@@ -2,9 +2,7 @@ FROM node:lts-alpine3.15
 WORKDIR /web
 COPY . .
 RUN npm config set registry https://registry.npmmirror.com && \
-    echo "NODE_ENV=production
-SYSTEM_ID=1518381705071689728
-OAUTH_API_URL=http://192.168.123.51:9898/api" > ./.env.production
+    echo -e "NODE_ENV=production\nSYSTEM_ID=1518381705071689728\nOAUTH_API_URL=http://192.168.123.51:9898/api" > ./.env.production
     npm install && npm i -g pm2
 
 CMD ["sh", "-c", "npm run prod && tail -F /dev/null"]
