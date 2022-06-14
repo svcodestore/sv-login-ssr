@@ -40,10 +40,12 @@ export class ApiService {
   }
 
   async login ({ username, password, type, clientId }: LoginParams) {
+    const req = this.request
     const { data } = await axios.create({
       baseURL: this.configService.get<string>('OAUTH_API_URL'),
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-Real-IP': req.connection.remoteAddress
       }
     }).post('/login', stringify({ username, password, type, clientId }))
 

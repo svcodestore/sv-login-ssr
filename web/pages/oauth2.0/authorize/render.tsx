@@ -70,8 +70,7 @@ const Authorization = (props: SProps) => {
         position: 'relative',
         backgroundColor: '#f0f2f5',
         backgroundRepeat: 'no-repeat',
-        backgroundImage:
-          'url("https://preview.pro.antdv.com/assets/background.ebcb9160.svg")'
+        backgroundImage: 'url("http://192.168.123.51:50105/10001.svg")'
       }}
     >
       <Spin />
