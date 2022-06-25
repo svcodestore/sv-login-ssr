@@ -4,6 +4,7 @@ import { message, Spin } from 'antd'
 import { IContext, SProps } from 'ssr-types-react'
 import { STORE_CONTEXT } from '_build/create-context'
 import { getGrantCode } from '@/apis'
+import { getResourceUrl } from '@/utils/help'
 
 interface Context {
   isLogin: boolean
@@ -57,6 +58,8 @@ const Authorization = (props: SProps) => {
     }
   }
 
+  const bgImgUrl = `${getResourceUrl()}/10001.svg`
+
   return (
     <div
       style={{
@@ -70,7 +73,7 @@ const Authorization = (props: SProps) => {
         position: 'relative',
         backgroundColor: '#f0f2f5',
         backgroundRepeat: 'no-repeat',
-        backgroundImage: 'url("http://192.168.123.51:50105/10001.svg")'
+        backgroundImage: `url(${bgImgUrl})`
       }}
     >
       <Spin />

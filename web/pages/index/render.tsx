@@ -7,6 +7,7 @@ import { login } from '@/apis'
 import { aesEncrypt } from '@/utils/crypto'
 import { IContext, SProps } from 'ssr-types-react'
 import { STORE_CONTEXT } from '_build/create-context'
+import { getResourceUrl } from '@/utils/help'
 
 interface Context {
   currentApplication: any
@@ -72,6 +73,8 @@ const Login = (props: SProps) => {
     }
   }, 300)
 
+  const bgImgUrl = `${getResourceUrl()}/10001.svg`
+
   return (
     <div
       style={{
@@ -82,7 +85,7 @@ const Login = (props: SProps) => {
         position: 'relative',
         backgroundColor: '#f0f2f5',
         backgroundRepeat: 'no-repeat',
-        backgroundImage: 'url("http://192.168.123.51:50105/10001.svg")'
+        backgroundImage: `url(${bgImgUrl})`
       }}
     >
       <div
