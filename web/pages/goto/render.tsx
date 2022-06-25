@@ -29,7 +29,7 @@ export default (props: SProps) => {
         title: e.name,
         description: state?.isIntranet ? e.internalUrl : e.homepageUrl
       },
-      goto: e.homepageUrl
+      goto: state?.isIntranet ? e.internalUrl : e.homepageUrl
     }
   })
 
