@@ -12,8 +12,17 @@ export class SsoMiddleware implements NestMiddleware {
     const authToken = req.originalUrl.startsWith('/api') ? req.headers.authorization : req.cookies.Authorization
     if (authToken?.startsWith('Bearer ')) {
       try {
+        const { hostname } = req
+        const isIntranet = hostname.split('.').every(e => !isNaN(+e))
+        let oauthApiKey = ''
+        if (isIntranet || hostname === 'localhost') {
+          oauthApiKey = 'OAUTH_API_URL'
+        } else {
+          oauthApiKey = 'PROD_OAUTH_API_URL'
+        }
+
         await axios.create({
-          baseURL: this.configService.get<string>('OAUTH_API_URL'),
+          baseURL: this.configService.get<string>(oauthApiKey),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             Authorization: authToken

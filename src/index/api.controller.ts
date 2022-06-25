@@ -6,6 +6,11 @@ import { ApiService } from './index.service'
 export class ApiController {
   constructor (private readonly apiService: ApiService) {}
 
+  @Get('/is-intranet')
+  async isIntranet () {
+    return await this.apiService.isIntranet()
+  }
+
   @Get('/file-server-url')
   async getFileServerUrl () {
     return await this.apiService.getFileServerUrl()

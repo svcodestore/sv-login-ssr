@@ -9,16 +9,38 @@ import { REQUEST } from '@nestjs/core'
 
 @Injectable()
 export class ApiService {
+  private readonly oauthApiKey: string
+
   constructor (
     private readonly applicationService: ApplicationService,
     private readonly configService: ConfigService,
-    @Inject(REQUEST) private readonly request: Request) { }
+    @Inject(REQUEST) private readonly request: Request) {
+    const { hostname } = request
+    const isIntranet = hostname.split('.').every(e => !isNaN(+e))
 
-  async getFileServerUrl() {
+    if (isIntranet || hostname === 'localhost') {
+      this.oauthApiKey = 'OAUTH_API_URL'
+    } else {
+      this.oauthApiKey = 'PROD_OAUTH_API_URL'
+    }
+  }
+
+  async isIntranet () {
+    const { hostname } = this.request
+    let flag = false
+    const isIntranet = hostname.split('.').every(e => !isNaN(+e))
+    if (hostname === 'localhost' || isIntranet) {
+      flag = true
+    }
+
+    return await Promise.resolve({ isIntranet: flag })
+  }
+
+  async getFileServerUrl () {
     const { hostname } = this.request
     let fileServerUrl = ''
-    const isInternal = hostname.split('.').every(e => !isNaN(+e))
-    if (hostname === 'localhost' || isInternal) {
+    const isIntranet = hostname.split('.').every(e => !isNaN(+e))
+    if (hostname === 'localhost' || isIntranet) {
       fileServerUrl = 'http://192.168.123.51:50105'
     } else {
       fileServerUrl = 'https://file.starvincci.ltd'
@@ -37,7 +59,7 @@ export class ApiService {
 
     try {
       const { data } = await axios.create({
-        baseURL: this.configService.get<string>('OAUTH_API_URL'),
+        baseURL: this.configService.get<string>(this.oauthApiKey),
         headers: {
           Authorization: authToken
         }
@@ -55,7 +77,7 @@ export class ApiService {
   async login ({ username, password, type, clientId }: LoginParams) {
     const req = this.request
     const { data } = await axios.create({
-      baseURL: this.configService.get<string>('OAUTH_API_URL'),
+      baseURL: this.configService.get<string>(this.oauthApiKey),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'X-Real-IP': req.connection.remoteAddress
@@ -73,7 +95,7 @@ export class ApiService {
     if (authToken?.startsWith('Bearer ')) {
       try {
         await axios.create({
-          baseURL: this.configService.get<string>('OAUTH_API_URL'),
+          baseURL: this.configService.get<string>(this.oauthApiKey),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             Authorization: authToken
@@ -99,7 +121,7 @@ export class ApiService {
     const authToken = req.headers.authorization || req.cookies.Authorization
 
     const { data } = await axios.create({
-      baseURL: this.configService.get<string>('OAUTH_API_URL'),
+      baseURL: this.configService.get<string>(this.oauthApiKey),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: authToken

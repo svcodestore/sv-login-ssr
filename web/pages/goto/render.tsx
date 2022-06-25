@@ -7,6 +7,7 @@ import { STORE_CONTEXT } from '_build/create-context'
 interface Context {
   isLogin: boolean
   myApps: Application[]
+  isIntranet: boolean
 }
 
 const { Meta } = Card
@@ -21,11 +22,12 @@ export default (props: SProps) => {
       props.history.push('/')
     }
   }
+
   cardsData = (state?.myApps || []).map(e => {
     return {
       meta: {
         title: e.name,
-        description: e.homepageUrl
+        description: state?.isIntranet ? e.internalUrl : e.homepageUrl
       },
       goto: e.homepageUrl
     }
