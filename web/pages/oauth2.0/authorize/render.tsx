@@ -4,14 +4,16 @@ import { message, Spin } from 'antd'
 import { IContext, SProps } from 'ssr-types-react'
 import { STORE_CONTEXT } from '_build/create-context'
 import { getGrantCode } from '@/apis'
-import { getResourceUrl } from '@/utils/help'
 
 interface Context {
   isLogin: boolean
+  fileServerUrl: string
 }
 
 const Authorization = (props: SProps) => {
   const { state } = useContext<IContext<Context>>(STORE_CONTEXT)
+
+  const bgImgUrl = state?.fileServerUrl + '/10001.svg'
 
   if (__isBrowser__) {
     const { pathname, search } = props.location
@@ -57,8 +59,6 @@ const Authorization = (props: SProps) => {
       props.history.push('/?' + p.toString())
     }
   }
-
-  const bgImgUrl = `${getResourceUrl()}/10001.svg`
 
   return (
     <div

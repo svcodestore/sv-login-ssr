@@ -15,7 +15,7 @@ import { ApplicationModule } from './application/application.module'
 })
 export class AppModule implements NestModule {
   configure (consumer: MiddlewareConsumer) {
-    const whiteList = ['/favicon.ico', '/oauth2.0/authorize', '/api/login', '/api/application/current-application']
+    const whiteList = ['/favicon.ico', '/oauth2.0/authorize', '/api/login', '/api/application/current-application', '/api/file-server-url']
     consumer.apply(SsoMiddleware).exclude(...whiteList).forRoutes('*')
   }
 }

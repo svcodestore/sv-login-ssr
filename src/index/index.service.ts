@@ -14,6 +14,19 @@ export class ApiService {
     private readonly configService: ConfigService,
     @Inject(REQUEST) private readonly request: Request) { }
 
+  async getFileServerUrl() {
+    const { hostname } = this.request
+    let fileServerUrl = ''
+    const isInternal = hostname.split('.').every(e => !isNaN(+e))
+    if (hostname === 'localhost' || isInternal) {
+      fileServerUrl = 'http://192.168.123.51:50105'
+    } else {
+      fileServerUrl = 'https://file.starvincci.ltd'
+    }
+
+    return await Promise.resolve({ fileServerUrl })
+  }
+
   async currentApplication () {
     return await this.applicationService.currentApplication()
   }

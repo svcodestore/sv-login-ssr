@@ -6,6 +6,11 @@ import { ApiService } from './index.service'
 export class ApiController {
   constructor (private readonly apiService: ApiService) {}
 
+  @Get('/file-server-url')
+  async getFileServerUrl () {
+    return await this.apiService.getFileServerUrl()
+  }
+
   @Get('/my-apps')
   async getMyApps () {
     return await this.apiService.getMyApps()

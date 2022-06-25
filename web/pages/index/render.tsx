@@ -7,11 +7,11 @@ import { login } from '@/apis'
 import { aesEncrypt } from '@/utils/crypto'
 import { IContext, SProps } from 'ssr-types-react'
 import { STORE_CONTEXT } from '_build/create-context'
-import { getResourceUrl } from '@/utils/help'
 
 interface Context {
   currentApplication: any
   isLogin: boolean
+  fileServerUrl: string
 }
 
 const LoginMessage: React.FC<{
@@ -29,6 +29,8 @@ const LoginMessage: React.FC<{
 
 const Login = (props: SProps) => {
   const { state } = useContext<IContext<Context>>(STORE_CONTEXT)
+
+  const bgImgUrl = state?.fileServerUrl + '/10001.svg'
 
   if (__isBrowser__) {
     if (!state?.isLogin) {
@@ -72,8 +74,6 @@ const Login = (props: SProps) => {
       }
     }
   }, 300)
-
-  const bgImgUrl = `${getResourceUrl()}/10001.svg`
 
   return (
     <div
