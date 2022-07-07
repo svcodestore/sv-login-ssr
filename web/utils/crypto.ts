@@ -1,15 +1,12 @@
 import CryptoJS from 'crypto-js'
 
 export function aesEncrypt (data: string): string {
-  const range = 2
+  const range = 10
   const timestamp = Date.now()
   const hex = parseInt(String(timestamp / 1000 / range)).toString(16)
   const keyStr = hex.padEnd(32, hex)
   const key = CryptoJS.enc.Utf8.parse(keyStr)
-  const _ivStr = hex
-    .split('')
-    .reverse()
-    .join('')
+  const _ivStr = hex.split('').reverse().join('')
   const ivStr = _ivStr.padEnd(16, _ivStr)
   const iv = CryptoJS.enc.Utf8.parse(ivStr)
 
@@ -23,15 +20,12 @@ export function aesEncrypt (data: string): string {
 }
 
 export function aesDecrypt (data: string): string {
-  const range = 2
+  const range = 10
   const timestamp = Date.now()
   const hex = parseInt(String(timestamp / 1000 / range)).toString(16)
   const keyStr = hex.padEnd(32, hex)
   const key = CryptoJS.enc.Utf8.parse(keyStr)
-  const _ivStr = hex
-    .split('')
-    .reverse()
-    .join('')
+  const _ivStr = hex.split('').reverse().join('')
   const ivStr = _ivStr.padEnd(16, _ivStr)
   const iv = CryptoJS.enc.Utf8.parse(ivStr)
 
